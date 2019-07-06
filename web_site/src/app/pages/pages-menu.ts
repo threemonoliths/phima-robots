@@ -19,7 +19,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'info',
     icon: 'layout-outline',
-    link: '/pages/layout/list',
     children: [
       {
         title: 'List',

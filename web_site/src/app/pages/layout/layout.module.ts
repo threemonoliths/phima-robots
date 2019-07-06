@@ -21,6 +21,8 @@ import { NewsPostComponent } from './infinite-list/news-post/news-post.component
 import { NewsPostPlaceholderComponent } from './infinite-list/news-post-placeholder/news-post-placeholder.component';
 import { AccordionComponent } from './accordion/accordion.component';
 import { NewsService } from './news.service';
+import { NbIconModule, NbInputModule } from '@nebular/theme';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 @NgModule({
   imports: [
@@ -36,6 +38,9 @@ import { NewsService } from './news.service';
     NbAccordionModule,
     NbUserModule,
     LayoutRoutingModule,
+    Ng2SmartTableModule,
+    NbIconModule,
+    NbInputModule,
   ],
   declarations: [
     LayoutComponent,

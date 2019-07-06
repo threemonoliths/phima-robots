@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { LocalDataSource } from 'ng2-smart-table';
 import { SmartTableData } from '../../../@core/data/smart-table';
 
-
 @Component({
   selector: 'ngx-smart-table',
   templateUrl: 'list.component.html',
@@ -56,6 +55,7 @@ export class ListComponent {
     const data = this.service.getData();
     this.source.load(data);
   }
+
 
   onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
