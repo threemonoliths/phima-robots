@@ -10,7 +10,6 @@ defmodule ApiServer.Repo.Migrations.CreateUsers do
       add :is_admin, :boolean
       add :active, :boolean
       
-
       timestamps()
     end
 

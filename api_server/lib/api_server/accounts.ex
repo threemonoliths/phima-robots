@@ -7,98 +7,60 @@ defmodule ApiServer.Accounts do
   alias ApiServer.Repo
 
   alias ApiServer.Accounts.User
+  use ApiServer.BaseContext
 
-  @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
-  def list_users do
-    Repo.all(User)
+  defmacro __using__(_opts) do
+    quote do
+      import ApiServer.Accounts
+      use ApiServer.BaseContext
+      alias ApiServer.Accounts.User
+    end
   end
 
-  @doc """
-  Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_user!(id), do: Repo.get!(User, id)
-
-  @doc """
-  Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
+  def page(params) do 
+    User
+    |> query_like(params, "name")
+    |> query_like(params, "full_name")
+    |> query_equal(params, "active")
+    |> query_equal(params, "is_admin")
+    |> query_order_by(params, "inserted_at")
+    |> get_pagination(params)
   end
 
-  @doc """
-  Updates a user.
-
-  ## Examples
-
-      iex> update_user(user, %{field: new_value})
-      {:ok, %User{}}
-
-      iex> update_user(user, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a User.
-
-  ## Examples
-
-      iex> delete_user(user)
-      {:ok, %User{}}
-
-      iex> delete_user(user)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+  # 验证通过返回true，否则返回false
+  def validate_username(params) do
+    params
+    |> Map.get("id", nil)
+    |> case do
+      nil ->
+        name = params
+        |> Map.get("name")
+        case get_by_name(User, name: name) do
+          {:ok, _} -> 
+            false
+          {:error, _} -> 
+            true
+        end
+      id ->
+        User
+        |> Repo.get(id)
+        |> case do
+          nil -> false
+          entity ->
+            name = params
+            |> Map.get("name")
+            User
+            |> query_equal(params, "name")
+            |> query_not_equal(params, "id")
+            |> Repo.exists?
+            |> case do
+              true -> 
+                false
+              false -> 
+                true
+            end 
+            
+        end
+    end
   end
 end

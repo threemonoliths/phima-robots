@@ -43,6 +43,15 @@ config :cors_plug,
   max_age: 86400,
   methods: ["*"]
 
+# scheduler
+config :api_server, ApiServer.Scheduler,
+  jobs: [
+    # Every minute get rob_worklog
+    {"* * * * *",     fn -> ApiServer.SyncWorklog.syn end},
+    # Runs every midnight get rob_systempra:
+    {"@daily",         fn -> ApiServer.SyncSystempra.syn end}
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
