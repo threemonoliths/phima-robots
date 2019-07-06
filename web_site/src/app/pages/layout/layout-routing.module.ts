@@ -13,20 +13,8 @@ const routes: Routes = [{
   component: LayoutComponent,
   children: [
     {
-      path: 'stepper',
-      component: StepperComponent,
-    },
-    {
       path: 'list',
       component: ListComponent,
-    },
-    {
-      path: 'infinite-list',
-      component: InfiniteListComponent,
-    },
-    {
-      path: 'accordion',
-      component: AccordionComponent,
     },
     {
       path: 'tabs',
